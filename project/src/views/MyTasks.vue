@@ -7,6 +7,8 @@
           :status="task.status"
           :id="task.id"
           @taskDeleted="handleTaskDeleted" 
+          @taskDescriptionChange= "handleChangeDescription" 
+          @taskStatusChange="handleChangeStatus"
         />
       </div>
     </div>
@@ -30,13 +32,20 @@ export default {
     methods:{
         async getMyTasks(){
             const res = await taskService.getAllByUser();
-            console.log(res.tasks)
             this.tasks = res.tasks;
             this.cargando = false;
         },   
         async handleTaskDeleted(id) {
             await taskService.delete(id);
-            await this.getTasks(); 
+            await this.getMyTasks(); 
+        },
+        async handleChangeDescription(message, id){
+            await taskService.updateDescription({description: message}, id);
+            await this.getMyTasks(); 
+        },
+        async handleChangeStatus(status, id){
+            await taskService.updateStatus({status: status}, id);
+            await this.getMyTasks();
         }
     },
     mounted(){

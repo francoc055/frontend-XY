@@ -31,6 +31,7 @@
             </button>
           </div>
         </form>
+        <h3 @click="redirect('sendEmail')" class="text-center text-white cursor-pointer">Olvide mi clave</h3>
       </div>
     </div>
 </template>
@@ -49,16 +50,12 @@ import Swal from 'sweetalert2';
     methods: {
       async login() {
         const status = await userService.login({email: this.email, password: this.password});
-        console.log(status)
         if(status == 200){
-          this.redirect();
-        }
-        else{
-          Swal.fire("Error en las credenciales");
+          this.redirect('myTasks');
         }
       },
-      redirect(){
-        this.$router.push('/myTasks');
+      redirect(param){
+        this.$router.push(`/${param}`);
       }
     }
   };

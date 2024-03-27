@@ -11,7 +11,7 @@
       </ul>
       <p v-else class="text-gray-500">Cargando comentarios...</p>
 
-         <div class="bg-slate-100 rounded-lg shadow-lg p-4 w-full flex mt-10">
+         <div class="bg-slate-100 rounded-lg shadow-lg p-4 w-full flex mt-10 flex-wrap">
             <textarea
                 v-model="newComment"
                 class="w-2/4 resize-none border rounded-md focus:outline-none focus:ring focus:border-blue-300"

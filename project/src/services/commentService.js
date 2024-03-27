@@ -1,16 +1,15 @@
 import {getToken} from './tokenService.js';
+import Swal from 'sweetalert2';
+
 
 class CommentService{
-    constructor() {
-        this.token = getToken();
-    }
 
     async getAllByTask(id){
         try {
             const res = await fetch(`http://127.0.0.1:8000/api/comments/task/${id}`,{
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             }
             });
             const data = await res.json();
@@ -28,7 +27,7 @@ class CommentService{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(data)
             })
@@ -49,14 +48,10 @@ class CommentService{
             const res = await fetch(`http://127.0.0.1:8000/api/comments/delete/${id}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             }
             })
 
-            if(res.status != 204){
-                throw new Error('Error al eliminar el comentario');
-            }
-            console.log(res)
             return res;
         } catch (error) {
             console.error(`error: ${error}`)

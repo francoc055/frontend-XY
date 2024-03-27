@@ -1,20 +1,18 @@
 import {getToken} from './tokenService.js';
+import Swal from 'sweetalert2';
 
 class TaskService{
-    constructor() {
-        this.token = getToken();
-    }
+
 
     async getAll(){
         try {
             const res = await fetch('http://127.0.0.1:8000/api/tasks/all',{
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             }
             });
             const data = await res.json();
-            console.log(data);
             return data;
         } catch (error) {
             console.error(`error: ${error}`)
@@ -23,14 +21,14 @@ class TaskService{
 
     async getAllByUser(){
         try {
+            // console.log(this.token)
             const res = await fetch('http://127.0.0.1:8000/api/tasks/allByUser',{
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             }
             });
             const data = await res.json();
-            console.log(data);
             return data;
         } catch (error) {
             console.error(`error: ${error}`)
@@ -43,15 +41,23 @@ class TaskService{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(data)
             })
 
-            if(!res.ok){
-                throw new Error('Error al crear la tarea');
+            if(res.status == 401){
+                Swal.fire({
+                    icon: "error",
+                    title: "No tienes autorizacion",
+                });
             }
-            console.log(res)
+            else if(res.status == 201){
+                Swal.fire({
+                    icon: "success",
+                    title: "Tarea creada",
+                });
+            }
             return res;
         } catch (error) {
             console.error(`error: ${error}`)
@@ -63,14 +69,22 @@ class TaskService{
             const res = await fetch(`http://127.0.0.1:8000/api/tasks/delete/${id}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             }
             })
 
-            if(res.status != 204){
-                throw new Error('Error al eliminar la tarea');
+            if(res.status == 401){
+                Swal.fire({
+                    icon: "error",
+                    title: "No tienes autorizacion",
+                });
             }
-            console.log(res)
+            else if(res.status == 204){
+                Swal.fire({
+                    icon: "success",
+                    title: "Eliminado",
+                });
+            }
             return res;
         } catch (error) {
             console.error(`error: ${error}`)
@@ -83,16 +97,23 @@ class TaskService{
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(newStatus)
             })
 
-            if(res.status != 204){
-                throw new Error('Error al actualizar la tarea');
+            if(res.status == 204){
+                Swal.fire({
+                    icon: "success",
+                    title: "Actualizado",
+                });
             }
-            console.log(res)
-            return res;
+            if(res.status == 404){
+                Swal.fire({
+                    icon: "error",
+                    title: "No tienes autorizacion",
+                });
+            }
         } catch (error) {
             console.error(`error: ${error}`)
         }
@@ -104,15 +125,23 @@ class TaskService{
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(newDescription)
             })
 
-            if(res.status != 204){
-                throw new Error('Error al actualizar la tarea');
+            if(res.status == 401){
+                Swal.fire({
+                    icon: "error",
+                    title: "No tienes autorizacion",
+                });
             }
-            console.log(res)
+            else if(res.status == 204){
+                Swal.fire({
+                    icon: "success",
+                    title: "Actualizado",
+                });
+            }
             return res;
         } catch (error) {
             console.error(`error: ${error}`)

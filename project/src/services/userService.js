@@ -1,9 +1,22 @@
 import {getToken} from './tokenService.js';
+import Swal from 'sweetalert2';
 
 
 class UserService{
-    constructor() {
-        this.token = getToken();
+
+    async getAll(){
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/users/all',{
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            }
+            });
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            console.error(`error: ${error}`)
+        }
     }
 
     async login(data){
@@ -12,13 +25,15 @@ class UserService{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(data)
             })
-
-            if(res.status != 200){
-                throw new Error('Error al loguearse');
+            if(res.status == 400){
+                Swal.fire({
+                    icon: "error",
+                    title: "Credenciales incorrectas",
+                });
             }
             data = await res.json();
             localStorage.setItem('token', data.token);
@@ -34,18 +49,23 @@ class UserService{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(data)
             })
-
-            if(res.status != 201){
-                throw new Error('Error al crear usuario');
+            
+            if(res.status == 401){
+                Swal.fire({
+                    icon: "error",
+                    title: "No tienes autorizacion",
+                });
             }
-            console.log(res)
+            if(res.status == 201){
+                Swal.fire("email enviado")
+            }
             return res.status;
         } catch (error) {
-            console.error(`error: ${error}`)
+            console.error(error)
         }
     }
 
@@ -55,15 +75,17 @@ class UserService{
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(data)
             })
 
-            if(res.status != 204){
-                throw new Error(`error al actualizar: ${res.status}`);
+            if(res.status == 401){
+                Swal.fire({
+                    icon: "error",
+                    title: "Credenciales incorrectas",
+                });
             }
-            console.log(res)
             return res.status;
         } catch (error) {
             console.error(`error: ${error}`)
@@ -76,15 +98,20 @@ class UserService{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
+                'Authorization': `Bearer ${getToken()}`
             },
             body: JSON.stringify(email)
             })
 
-            if(res.status != 200){
-                throw new Error('Error al enviar email');
+            if(res.status == 404){
+                Swal.fire({
+                    icon: "error",
+                    title: "No existe el email",
+                });
             }
-            console.log(res)
+            if(res.status == 200){
+                Swal.fire("email enviado")
+            }
             return res;
         } catch (error) {
             console.error(`error: ${error}`)

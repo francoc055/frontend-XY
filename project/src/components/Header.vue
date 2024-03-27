@@ -8,7 +8,7 @@
                 <li>|</li>
                 <li><router-link to="/register" class="text-white hover:text-gray-200">Create user</router-link></li>
                 <li>|</li>
-                <li><router-link to="/resetPass" class="text-white hover:text-gray-200">Reset password</router-link></li>
+                <li><router-link to="/" @click="logout" class="text-white hover:text-gray-200">Logout</router-link></li>
             </ul>
         </nav>
     </header>
@@ -17,6 +17,10 @@
 
 <script>
 export default{
-    
+    methods:{
+        logout(){
+            localStorage.clear();
+        }
+    }
 }
 </script>

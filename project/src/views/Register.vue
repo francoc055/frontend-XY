@@ -49,7 +49,6 @@ import Swal from 'sweetalert2';
     methods: {
       async submitForm() {
         const status = await userService.create({name: this.name, email: this.email});
-        status == 201 ? Swal.fire("email enviado") : Swal.fire("Error al enviar el email");
       }
     }
   };

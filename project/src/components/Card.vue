@@ -3,26 +3,33 @@
   <div class="bg-white rounded-lg shadow p-4 w-60 m-5">
     <!-- Mensaje de la tarea -->
     <div class="flex items-center">
-      <p class="text-gray-700 mb-2">{{ taskMessage }}</p>
-      <button class="p-2" @click="edit"><img src="./../assets/btnEdit.png" alt=""></button>
-      <button @click="deleteTask" class="w-8 h-8 bg-red-400 rounded-md duration-300 hover:bg-red-600">
-        X
-      </button>
+      <!-- <p class="text-gray-700 mb-2">{{ taskMessage }}</p> -->
+      <!-- <input class="mb-3 border-b border-gray-300 focus:outline-none focus:border-indigo-500 w-full" type="text" v-model="message" required> -->
+      <textarea class="mb-3 border-b border-gray-300 focus:outline-none focus:border-indigo-500 w-full resize-none" v-model="message" required></textarea>
+      <button class="p-2" @click="changeDescription"><img src="./../assets/btnEdit.png" alt=""></button>
     </div>
 
     <!-- Menú desplegable para el estado de la tarea -->
     <div class="mb-2">
       <label for="taskStatus" class="block text-sm font-medium text-gray-700">Estado de la tarea:</label>
-      <select id="taskStatus" v-model="taskStatus" class="mt-1 block w-full px-2 py-1 border border-gray-300 
+      <select @change="handleChangeStatus" id="taskStatus" v-model="taskStatus" class="mt-1 block w-full px-2 py-1 border border-gray-300 
               bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 
               sm:text-sm">
         <option value="" hidden>{{ status }}</option>
-        <option value="pendiente">Pendiente</option>
-        <option value="en-proceso">Proceso</option>
-        <option value="bloqueado">Bloqueado</option>
-        <option value="completado">Completado</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Bloqueado">Bloqueado</option>
+        <option value="Completado">Completado</option>
       </select>
     </div>
+
+    <div class="flex justify-center items-center">
+      <button @click="deleteTask" class="w-8 h-8 bg-red-400 rounded-md duration-300 hover:bg-red-600">
+        X
+      </button>
+      <button class="p-2 text-3xl" @click="edit">...</button>
+    </div>
+
 
 
     <!-- TaskDetail modal -->
@@ -62,6 +69,12 @@ export default {
     },
     deleteTask() {
       this.$emit('taskDeleted', this.id); // Emitir el evento taskDeleted con el ID de la tarea
+    },
+    async changeDescription(){
+      this.$emit('taskDescriptionChange', this.message, this.id);
+    },
+    handleChangeStatus() {
+      this.$emit('taskStatusChange', this.taskStatus, this.id);
     }
   },
   mounted() {
